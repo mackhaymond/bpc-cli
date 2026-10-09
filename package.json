@@ -1,0 +1,15 @@
+{
+  "name": "bpc-cli",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Run Bypass Paywalls Clean in isolated headless Chromium and return rendered HTML",
+  "type": "module",
+  "bin": { "bpc-html": "bin/bpc-html.js" },
+  "scripts": {
+    "setup": "playwright install chromium",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": { "node": ">=22" },
+  "license": "MIT",
+  "dependencies": { "playwright": "1.64.0" }
+}

@@ -1,0 +1,8 @@
+node_modules/
+.codegraph/
+.cursor/
+extension.zip
+upstream/
+references/
+artifacts/
+.DS_Store

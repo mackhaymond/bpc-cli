@@ -1,0 +1,20 @@
+{
+  "retrieved": "2026-10-09",
+  "bpc": {
+    "version": "4.4.6.6",
+    "repository": "https://gitflic.ru/project/magnolia1234/bypass-paywalls-chrome-clean",
+    "readmeCommit": "aaa2b3596fd518fa4171dbab7463d4a14d898a0f",
+    "archive": "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass-paywalls-chrome-clean-master.zip",
+    "archiveSha256": "55b95667c78352ce12c708922d2f9e6972310873a669492c05b3ffd6cd200489",
+    "runtimeAdaptation": "Use upstream custom/manifest.json in a temporary copy; JavaScript sources unchanged",
+    "license": "MIT"
+  },
+  "llmfeeder": {
+    "version": "2.2.1",
+    "repository": "https://github.com/jatinkrmalik/LLMFeeder",
+    "commit": "32f0f8b27d8bede59e886a63c81736c02f266747",
+    "files": ["extension/content.js", "extension/settings.js", "extension/shortcut-utils.js", "extension/libs/readability.js", "extension/libs/turndown.js"],
+    "runtimeAdaptation": "Unchanged sources run in a CDP isolated world; local adapter transports the normal convertToMarkdown message",
+    "license": "MIT; Readability Apache-2.0; Turndown MIT"
+  }
+}

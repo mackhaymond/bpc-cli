@@ -1,0 +1,104 @@
+{
+  "11Freunde.de": {
+    "domain": "11freunde.de",
+    "allow_cookies": 1,
+    "ld_archive_is": "div[data-area='paywall']|article",
+    "upd_version": "4.4.6.3"
+  },
+  "Corriere dello Sport": {
+    "domain": "corrieredellosport.it",
+    "allow_cookies": 1,
+    "amp_redirect": "div[class^='Paywall_section__']",
+    "upd_version": "4.4.5.7"
+  },
+  "Falter.at": {
+    "domain": "falter.at",
+    "allow_cookies": 1,
+    "useragent": "googlebot",
+    "cs_code": "[{\"hide_elem\":\"[x-data='aditionAdsSlot'],div.remp-banner\"}]",
+    "upd_version": "4.4.6.6"
+  },
+  "Harper's Magazine": {
+    "domain": "harpers.org",
+    "block_regex": "\\/harpers\\.org\\/wp-content\\/themes\\/timber\\/static\\/js\\/modal.+\\.js",
+    "useragent": "googlebot",
+    "upd_version": "4.4.6.4"
+  },
+  "Manager-magazin.de": {
+    "domain": "manager-magazin.de",
+    "allow_cookies": 1,
+    "ld_archive_is": "div[data-area='paywall']|article",
+    "upd_version": "4.4.6.2"
+  },
+  "Mediahuis Ireland": {
+    "domain": "###_ie_mediahuis",
+    "group": [
+      "belfasttelegraph.co.uk",
+      "independent.ie"
+    ],
+    "allow_cookies": 1,
+    "ld_archive_is": "div#flip-pay:not(:empty)|article section",
+    "upd_version": "4.4.5.7"
+  },
+  "Reach Group UK": {
+    "domain": "###_uk_reach",
+    "group": [
+      "dailyrecord.co.uk",
+      "express.co.uk",
+      "irishmirror.ie",
+      "mirror.co.uk"
+    ],
+    "allow_cookies": 1,
+    "block_regex": "\\.piano\\.io",
+    "cs_code": "[{\"hide_elem\":\"div#pp-prompt\"}]",
+    "upd_version": "4.4.6.2"
+  },
+  "Stylist.co.uk": {
+    "domain": "stylist.co.uk",
+    "allow_cookies": 1,
+    "useragent": "googlebot",
+    "cs_code": "[{\"hide_elem\":\"div.image-loader\"}]",
+    "upd_version": "4.4.6.1"
+  },
+  "The Daily Beast": {
+    "domain": "thedailybeast.com",
+    "allow_cookies": 1,
+    "block_regex": "\\.thedailybeast\\.com\\/zephr\\/",
+    "upd_version": "4.4.5.6"
+  },
+  "The Diplomat": {
+    "domain": "thediplomat.com",
+    "allow_cookies": 1,
+    "block_regex": "\\.cloudfunctions\\.net\\/gated-countView",
+    "block_host_perm_add": "cloudfunctions.net",
+    "cs_dompurify": 1,
+    "upd_version": "4.4.6.5"
+  },
+  "The Economist (removed)": {
+    "domain": "economist.com",
+    "allow_cookies": 1,
+    "block_regex": "\\.economist\\.com\\/latest\\/wall-ui\\.js",
+    "nofix": 1,
+    "cs_block": 1,
+    "cs_code": [{"cond": "html,body", "set_attrib":"style|overflow: visible !important"}],
+    "upd_version": "4.4.6.2"
+  },
+  "The Quint": {
+    "domain": "thequint.com",
+    "allow_cookies": 1,
+    "amp_redirect": "div#paywall-widget|/amp/story{path}",
+    "cs_code": [{"cond":"div.qt-amp-story-container-class", "rm_class":"qt-amp-story-container-class"}, {"hide_elem":"div.paywall-card"}],
+    "upd_version": "4.4.5.8"
+  },
+  "The Spectator Group": {
+    "domain": "###_uk_spectator",
+    "group": [
+      "spectator.com",
+      "spectator.com.au",
+      "apollo-magazine.com"
+    ],
+    "allow_cookies": 1,
+    "block_regex": "\\.piano\\.io",
+    "upd_version": "4.4.5.4"
+  }
+}
