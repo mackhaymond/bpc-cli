@@ -25,6 +25,21 @@ before(async () => {
       res.setHeader('Content-Type', 'text/html');
       res.end('<title>Just a moment...</title><body>Checking your browser</body>');
     } else if (req.url === '/loop') { res.writeHead(302, { Location: '/loop' }); res.end(); }
+    else if (req.url === '/bpc-failed') {
+      res.setHeader('Content-Type', 'text/html');
+      res.end('<title>Article</title><div id="bpc_fail">BPC > Try for full article text ~ no article content found!</div>');
+    } else if (req.url === '/challenge-frame') {
+      res.setHeader('Content-Type', 'text/html');
+      res.end('<title>Publisher</title><iframe title="DataDome CAPTCHA" src="about:blank"></iframe>');
+    } else if (req.url === '/feature') {
+      res.setHeader('Content-Type', 'text/html');
+      res.end(`<!doctype html><title>Feature article</title><body><nav>UNRELATED NAVIGATION</nav><main>
+        <h1>Feature article</h1>
+        <header><p class="subtitle">The introductory summary explains why this feature matters and provides necessary context for understanding the article and its accompanying charts.</p></header>
+        ${Array.from({ length: 8 }, (_, i) => `<p>Section ${i + 1}: This sufficiently long article paragraph gives essential context for the main feature, with punctuation and several complete sentences for the content extraction algorithm.</p>`).join('')}
+        <div class="caption"><p>Chart source: Original research data. This note explains the underlying assumptions and exclusions that are essential for correctly interpreting the figure.</p></div>
+        </main><footer>UNRELATED FOOTER</footer></body>`);
+    }
     else if (req.url === '/formatted') {
       res.setHeader('Content-Type', 'text/html');
       res.end(`<!doctype html><title>Markdown fixture</title><body><nav>UNRELATED NAVIGATION</nav><article>
@@ -132,4 +147,25 @@ test('LLMFeeder extracts the article and preserves Markdown links, code, tables 
   assert.match(markdown, /\| Name \| Value \|/);
   assert.match(markdown, /Source: \[Markdown fixture\]/);
   assert.doesNotMatch(markdown, /UNRELATED NAVIGATION|UNRELATED FOOTER/);
+});
+
+test('failed BPC fetches and iframe challenges never return successful article output', async () => {
+  for (const path of ['/bpc-failed', '/challenge-frame']) {
+    const output = join(dir, 'preserved-output.md');
+    await writeFile(output, 'Existing document');
+    const result = await run([`${base}${path}`, '--markdown', '-o', output, '--no-bypass', '--wait', '0']);
+    assert.equal(result.code, 1, result.stderr);
+    assert.equal(result.stdout, '');
+    assert.match(result.stderr, /could not retrieve the article|bot challenge/);
+    assert.equal(await readFile(output, 'utf8'), 'Existing document');
+  }
+});
+
+test('feature summaries and chart notes survive Readability extraction', async () => {
+  const result = await run([`${base}/feature`, '--no-bypass', '--markdown', '--wait', '0']);
+  assert.equal(result.code, 0, result.stderr);
+  assert.match(result.stdout, /The introductory summary explains why this feature matters/);
+  assert.match(result.stdout, /Chart source: Original research data/);
+  assert.match(result.stdout, /Section 8:/);
+  assert.doesNotMatch(result.stdout, /UNRELATED NAVIGATION|UNRELATED FOOTER/);
 });

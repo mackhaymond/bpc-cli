@@ -13,8 +13,18 @@
     "version": "2.2.1",
     "repository": "https://github.com/jatinkrmalik/LLMFeeder",
     "commit": "32f0f8b27d8bede59e886a63c81736c02f266747",
-    "files": ["extension/content.js", "extension/settings.js", "extension/shortcut-utils.js", "extension/libs/readability.js", "extension/libs/turndown.js"],
-    "runtimeAdaptation": "Unchanged sources run in a CDP isolated world; local adapter transports the normal convertToMarkdown message",
+    "files": [
+      "extension/content.js",
+      "extension/settings.js",
+      "extension/shortcut-utils.js",
+      "extension/libs/readability.js",
+      "extension/libs/turndown.js"
+    ],
+    "runtimeAdaptation": "Unchanged sources run in a CDP isolated world; the adapter invokes the normal conversion message and reruns fullPage on a scoped semantic clone when Readability loses paragraphs",
     "license": "MIT; Readability Apache-2.0; Turndown MIT"
+  },
+  "publisherFallbacks": {
+    "ft": "Retry the publisher Facebook preview representation when the original article fetch fails",
+    "reuters": "Look up a matching headline and publication date through Devdiscourse Search; verify the live headline and Reuters attribution, and include both source URLs"
   }
 }
