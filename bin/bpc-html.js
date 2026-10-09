@@ -17,6 +17,7 @@ Use --markdown to process the page through LLMFeeder's local converter.
 Options:
   -o, --output <file>       Save output to a file instead of stdout
   -m, --markdown            Output Markdown through LLMFeeder instead of HTML
+      --native-files        Keep file links as original bytes even with --markdown
       --wait <seconds>      Minimum processing time after navigation (default: 5)
       --timeout <seconds>   Total time limit including browser startup (default: 60)
       --selector <css>      Require a visible element before exporting HTML
@@ -45,6 +46,7 @@ try {
     options: {
       output: { type: 'string', short: 'o' },
       markdown: { type: 'boolean', short: 'm', default: false },
+      'native-files': { type: 'boolean', default: false },
       wait: { type: 'string', default: '5' },
       timeout: { type: 'string', default: '60' },
       selector: { type: 'string' },
@@ -68,10 +70,11 @@ try {
       customRulesPath: values['custom-rules'],
       userAgent: values['user-agent'],
       markdown: values.markdown,
+      nativeFiles: values['native-files'],
       bypass: !values['no-bypass'],
       log: message => { if (values.verbose) process.stderr.write(`${message}\n`); },
     });
-    const output = values.markdown ? result.markdown : result.html;
+    const output = result.data ?? (values.markdown ? result.markdown : result.html);
     if (values.output) await writeFile(values.output, output, 'utf8');
     else await new Promise((resolve, reject) => process.stdout.write(output, error => error ? reject(error) : resolve()));
   }

@@ -7,7 +7,7 @@
   "bin": { "bpc-html": "bin/bpc-html.js" },
   "scripts": {
     "setup": "playwright install chromium",
-    "test": "node --test test/*.test.js"
+    "test": "node --test --test-concurrency=1 test/*.test.js"
   },
   "engines": { "node": ">=22" },
   "license": "MIT",

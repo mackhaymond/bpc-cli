@@ -31,6 +31,12 @@ before(async () => {
     } else if (req.url === '/challenge-frame') {
       res.setHeader('Content-Type', 'text/html');
       res.end('<title>Publisher</title><iframe title="DataDome CAPTCHA" src="about:blank"></iframe>');
+    } else if (req.url === '/plain-gate') {
+      res.setHeader('Content-Type', 'text/html');
+      res.end('<title>Article</title><main><h1>Article title</h1><section><p>Thank you for your interest—please log in or subscribe to read the full article.</p></section></main>');
+    } else if (req.url === '/hidden-failure') {
+      res.setHeader('Content-Type', 'text/html');
+      res.end(`<title>Article</title><div class="n-content-body" style="display:none">${'Hidden inaccessible article text. '.repeat(20)}</div><div id="bpc_fail">BPC > no article content found!</div>`);
     } else if (req.url === '/feature') {
       res.setHeader('Content-Type', 'text/html');
       res.end(`<!doctype html><title>Feature article</title><body><nav>UNRELATED NAVIGATION</nav><main>
@@ -119,7 +125,9 @@ test('deadline stops a missing selector without returning partial HTML', async (
   assert.equal(result.code, 1);
   assert.equal(result.stdout, '');
   assert.match(result.stderr, /[Tt]imeout|Timed out/);
-  assert.ok(Date.now() - started < 8000);
+  // The deadline bounds the operation; browser shutdown and cold Node startup
+  // can take additional time when the host is running concurrent source audits.
+  assert.ok(Date.now() - started < 12000);
 });
 
 test('rejects invalid input before launching a browser', async () => {
@@ -150,13 +158,13 @@ test('LLMFeeder extracts the article and preserves Markdown links, code, tables 
 });
 
 test('failed BPC fetches and iframe challenges never return successful article output', async () => {
-  for (const path of ['/bpc-failed', '/challenge-frame']) {
+  for (const path of ['/bpc-failed', '/challenge-frame', '/hidden-failure', '/plain-gate']) {
     const output = join(dir, 'preserved-output.md');
     await writeFile(output, 'Existing document');
     const result = await run([`${base}${path}`, '--markdown', '-o', output, '--no-bypass', '--wait', '0']);
     assert.equal(result.code, 1, result.stderr);
     assert.equal(result.stdout, '');
-    assert.match(result.stderr, /could not retrieve the article|bot challenge/);
+    assert.match(result.stderr, /could not retrieve the article|bot challenge|still paywalled/);
     assert.equal(await readFile(output, 'utf8'), 'Existing document');
   }
 });

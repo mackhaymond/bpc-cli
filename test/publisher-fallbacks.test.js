@@ -38,3 +38,36 @@ test('syndication lookup only requests the supported publisher and dated article
   assert.equal(await findReutersSyndication('https://example.com/article', { fetchImpl }), null);
   assert.equal(await findReutersSyndication('https://www.reuters.com/', { fetchImpl }), null);
 });
+
+
+test('headline matching rejects the same factual words in a contradictory order', async () => {
+  const requested = 'oil-prices-rise-as-middle-east-tensions-ease-and-demand-forecast-improves';
+  const opposite = 'Oil prices ease as Middle East tensions rise and demand forecast improves';
+  assert.equal(matchesHeadline(requested, opposite), false);
+  assert.equal(matchesHeadline(requested, 'ROI-Oil prices rise as Middle East tensions ease and demand forecast improves: Andy Home'), true);
+  const result = await findReutersSyndication(`https://www.reuters.com/business/energy/${requested}-2026-10-07/`, {
+    fetchImpl: async () => ({ ok: true, json: async () => [{ ...article, title: opposite }] }),
+  });
+  assert.equal(result, null);
+});
+
+test('headline matching normalizes publisher apostrophes while retaining ordered identity', () => {
+  assert.equal(matchesHeadline('uaes-adnoc-buys-millions-barrels-iraqi-crude-sources-say',
+    "UAE’s ADNOC buys millions of barrels of Iraqi crude, sources say"), true);
+});
+
+
+test('headline matching never drops a negation or changes a single factual term', () => {
+  assert.equal(matchesHeadline('oil-prices-rise-after-iran-says-it-will-not-close-strait-hormuz',
+    'Oil prices rise after Iran says it will close Strait Hormuz'), false);
+  assert.equal(matchesHeadline('oil-prices-rise-on-growing-middle-east-tensions-as-investors-weigh-demand-outlook',
+    'Oil prices fall on growing Middle East tensions as investors weigh demand outlook'), false);
+});
+
+
+test('headline matching rejects added negation or other substantive terms', () => {
+  assert.equal(matchesHeadline('oil-prices-rise-after-iran-says-it-will-close-strait-hormuz',
+    'Oil prices rise after Iran says it will not close Strait Hormuz'), false);
+  assert.equal(matchesHeadline('oil-prices-rise-on-growing-middle-east-tensions-as-investors-weigh-demand-outlook',
+    'Oil prices fail to rise on growing Middle East tensions as investors weigh demand outlook'), false);
+});

@@ -20,11 +20,18 @@
       "extension/libs/readability.js",
       "extension/libs/turndown.js"
     ],
-    "runtimeAdaptation": "Unchanged sources run in a CDP isolated world; the adapter invokes the normal conversion message and reruns fullPage on a scoped semantic clone when Readability loses paragraphs",
+    "runtimeAdaptation": "Unchanged sources run in an isolated world; preserve visible prose and annotations using scoped semantic clones, and use scoped full-page conversion for interactive reports and PDF text projections",
     "license": "MIT; Readability Apache-2.0; Turndown MIT"
   },
   "publisherFallbacks": {
-    "ft": "Retry the publisher Facebook preview representation when the original article fetch fails",
-    "reuters": "Look up a matching headline and publication date through Devdiscourse Search; verify the live headline and Reuters attribution, and include both source URLs"
+    "ft": "Retry genuine publisher Facebook preview URLs for content and interactive articles, including validated original FT URLs from subscription redirects",
+    "reuters": "Look up a matching headline and publication date through Devdiscourse Search; verify the live headline and Reuters attribution, and include both source URLs",
+    "native": "When installed, agent-chrome runs isolated background native browsers with per-invocation ownership, scoped cleanup and HTTP error guards; native page HTML is processed by BPC and original PDF bytes may be captured directly"
+  },
+  "files": {
+    "output": "Original bytes by default; --native-files preserves original files in mixed Markdown batches",
+    "optionalPdfConversion": "Poppler pdftotext into a page-by-page text projection processed by LLMFeeder full-page conversion",
+    "integrity": "Preserve browser-modified download headers, validate PDF magic and complete byte ranges, and reject partial exports",
+    "maxBytes": 52428800
   }
 }
